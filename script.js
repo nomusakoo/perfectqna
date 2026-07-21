@@ -24,6 +24,7 @@
   let drawing = false;
   let lastPoint = null;
   let checkQueued = false;
+  let lastWrapWidth = null;
 
   function getDailyIndex(len) {
     const now = new Date();
@@ -49,6 +50,7 @@
     canvas.style.width = rect.width + "px";
     canvas.style.height = rect.height + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lastWrapWidth = rect.width;
   }
 
   function inkColor() {
@@ -228,7 +230,13 @@
   });
 
   window.addEventListener("resize", () => {
-    if (!revealed) resetCanvas();
+    if (revealed) return;
+    // 모바일 브라우저는 주소창이 접히고 펼쳐질 때도 resize를 쏘는데,
+    // 그때마다 캔버스를 새로 그리면 문지르던 진행 상황이 사라진다.
+    // 실제로 너비가 바뀐 경우(회전, 창 크기 조절)에만 다시 그린다.
+    const width = canvasWrap.getBoundingClientRect().width;
+    if (lastWrapWidth !== null && Math.abs(width - lastWrapWidth) < 1) return;
+    resetCanvas();
   });
 
   dateLabelEl.textContent = formatDate();
