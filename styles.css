@@ -7,6 +7,9 @@
   --accent: #7a2e2e;
   --ink-canvas: #201c18;
   --muted-rgb: 28, 26, 23;
+  --seal: #b23a2c;
+  --seal-ink: #f6ece0;
+  --grain-opacity: 0.32;
 }
 
 * {
@@ -29,9 +32,24 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch' seed='3'%3E%3C/feTurbulence%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0'%3E%3C/feColorMatrix%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'%3E%3C/rect%3E%3C/svg%3E");
 }
 
 .page {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 680px;
   padding: 48px 24px 64px;
@@ -96,6 +114,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  user-select: none;
 }
 
 .instruction {
@@ -151,6 +170,45 @@ body {
 .attribution.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.seal {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  width: 34px;
+  height: 34px;
+  opacity: 0;
+  transform: scale(1.7) rotate(-11deg);
+  transform-origin: center;
+  transition: opacity 0.25s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 2px 3px rgba(var(--muted-rgb), 0.35));
+}
+
+.seal.stamped {
+  opacity: 0.92;
+  transform: scale(1) rotate(-4deg);
+}
+
+.seal-body {
+  fill: var(--seal);
+}
+
+.seal-char {
+  font-family: "Noto Serif KR", serif;
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--seal-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal {
+    transition: opacity 0.3s ease;
+    transform: none;
+  }
+  .seal.stamped {
+    transform: none;
+  }
 }
 
 #inkCanvas {
@@ -222,12 +280,19 @@ body {
     --accent: #d98c6b;
     --ink-canvas: #060504;
     --muted-rgb: 236, 228, 211;
+    --seal: #d1503c;
+    --seal-ink: #fbf3e7;
+    --grain-opacity: 0.4;
   }
   body {
     background:
       radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.04), transparent 60%),
       radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.25), transparent 55%),
       var(--paper);
+  }
+  body::before {
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch' seed='3'%3E%3C/feTurbulence%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.42 0 0 0 0'%3E%3C/feColorMatrix%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'%3E%3C/rect%3E%3C/svg%3E");
   }
   .canvas-wrap {
     box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(0,0,0,0.35);

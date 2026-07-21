@@ -28,6 +28,17 @@
           <div class="answer-layer">
             <p class="answer" id="answer"></p>
             <p class="attribution" id="attribution"></p>
+            <svg class="seal" id="seal" viewBox="0 0 44 44" aria-hidden="true">
+              <defs>
+                <filter id="sealRough" x="-30%" y="-30%" width="160%" height="160%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="2" seed="7" result="noise"></feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.4"></feDisplacementMap>
+                </filter>
+              </defs>
+              <rect x="5" y="5" width="34" height="34" rx="1" class="seal-body" filter="url(#sealRough)"></rect>
+              <text x="22" y="20" text-anchor="middle" class="seal-char">一</text>
+              <text x="22" y="36" text-anchor="middle" class="seal-char">問</text>
+            </svg>
           </div>
           <canvas id="inkCanvas" aria-label="문질러서 답을 드러내는 먹 화면"></canvas>
         </div>
