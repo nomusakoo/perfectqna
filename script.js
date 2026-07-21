@@ -9,7 +9,17 @@
   const fallbackBtn = document.getElementById("fallbackBtn");
   const shuffleBtn = document.getElementById("shuffleBtn");
   const sealEl = document.getElementById("seal");
+  const shareRow = document.getElementById("shareRow");
+  const shareKakaoBtn = document.getElementById("shareKakao");
+  const shareFacebookBtn = document.getElementById("shareFacebook");
+  const shareLinkBtn = document.getElementById("shareLink");
+  const shareToast = document.getElementById("shareToast");
   const ctx = canvas.getContext("2d");
+
+  // https://developers.kakao.com 에서 발급받은 JavaScript 키를 넣으면
+  // 카카오톡 공유가 정식 공유 카드로 열립니다. 비워두면 웹 공유 시트 /
+  // 링크 복사로 대체됩니다.
+  const KAKAO_JS_KEY = "";
 
   const REVEAL_THRESHOLD = 0.35; // 이 비율 이상 지워지면 나머지를 자동으로 완전히 드러냄
   const SAMPLE_W = 48;
@@ -39,6 +49,76 @@
     const m = String(now.getMonth() + 1).padStart(2, "0");
     const d = String(now.getDate()).padStart(2, "0");
     return `${y}.${m}.${d}`;
+  }
+
+  let kakaoSdkLoaded = false;
+
+  function loadKakaoSdk() {
+    if (!KAKAO_JS_KEY || kakaoSdkLoaded || window.Kakao) return;
+    kakaoSdkLoaded = true;
+    const script = document.createElement("script");
+    script.src = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
+    script.crossOrigin = "anonymous";
+    script.onload = () => {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(KAKAO_JS_KEY);
+      }
+    };
+    document.head.appendChild(script);
+  }
+
+  function pageUrl() {
+    return window.location.href.split("#")[0].split("?")[0];
+  }
+
+  function shareText() {
+    const q = QUOTES[currentIndex];
+    return `"${q.question}"\n\n${q.answer}\n— ${q.philosopher}, ${q.source}\n\n하루 한 물음`;
+  }
+
+  function showToast(message) {
+    shareToast.textContent = message;
+    shareToast.classList.add("visible");
+    clearTimeout(showToast._timer);
+    showToast._timer = setTimeout(() => shareToast.classList.remove("visible"), 1800);
+  }
+
+  function copyShareLink() {
+    const text = shareText() + "\n" + pageUrl();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => showToast("복사했어요"),
+        () => showToast("복사에 실패했어요")
+      );
+    } else {
+      showToast("복사에 실패했어요");
+    }
+  }
+
+  function shareToFacebook() {
+    const shareUrl =
+      "https://www.facebook.com/sharer/sharer.php?u=" +
+      encodeURIComponent(pageUrl()) +
+      "&quote=" +
+      encodeURIComponent(shareText());
+    window.open(shareUrl, "_blank", "noopener,noreferrer,width=600,height=600");
+  }
+
+  function shareToKakao() {
+    if (window.Kakao && window.Kakao.isInitialized()) {
+      window.Kakao.Share.sendDefault({
+        objectType: "text",
+        text: shareText(),
+        link: { mobileWebUrl: pageUrl(), webUrl: pageUrl() }
+      });
+      return;
+    }
+    if (navigator.share) {
+      navigator.share({ title: "하루 한 물음", text: shareText(), url: pageUrl() }).catch(() => {});
+      return;
+    }
+    copyShareLink();
+    showToast("링크를 복사했어요. 카카오톡에 붙여넣어 보세요");
   }
 
   function sizeCanvas() {
@@ -104,6 +184,8 @@
     revealed = false;
     attributionEl.classList.remove("visible");
     sealEl.classList.remove("stamped");
+    shareRow.classList.remove("visible");
+    shareToast.classList.remove("visible");
     instructionEl.style.opacity = "1";
   }
 
@@ -178,6 +260,7 @@
     instructionEl.style.opacity = "0";
     setTimeout(() => attributionEl.classList.add("visible"), 300);
     setTimeout(() => sealEl.classList.add("stamped"), 700);
+    setTimeout(() => shareRow.classList.add("visible"), 900);
   }
 
   function pointFromEvent(e) {
@@ -218,6 +301,10 @@
 
   fallbackBtn.addEventListener("click", completeReveal);
 
+  shareLinkBtn.addEventListener("click", copyShareLink);
+  shareFacebookBtn.addEventListener("click", shareToFacebook);
+  shareKakaoBtn.addEventListener("click", shareToKakao);
+
   shuffleBtn.addEventListener("click", () => {
     let next = currentIndex;
     if (QUOTES.length > 1) {
@@ -232,6 +319,7 @@
     if (!revealed) resetCanvas();
   });
 
+  loadKakaoSdk();
   dateLabelEl.textContent = formatDate();
   loadQuote(getDailyIndex(QUOTES.length));
 })();
