@@ -8,6 +8,7 @@
   const canvas = document.getElementById("inkCanvas");
   const fallbackBtn = document.getElementById("fallbackBtn");
   const shuffleBtn = document.getElementById("shuffleBtn");
+  const sealEl = document.getElementById("seal");
   const ctx = canvas.getContext("2d");
 
   const REVEAL_THRESHOLD = 0.55; // 이 비율 이상 지워지면 나머지를 자동으로 완전히 드러냄
@@ -63,12 +64,30 @@
     ctx.fillStyle = inkColor();
     ctx.fillRect(0, 0, rect.width, rect.height);
 
-    // 먹을 갈아낸 듯한 미세한 질감
-    ctx.globalAlpha = 0.05;
-    for (let i = 0; i < 90; i++) {
+    // 굵은 붓결 — 한 방향으로 갈린 먹의 결
+    const strokeAngle = -0.35;
+    for (let i = 0; i < 16; i++) {
       const x = Math.random() * rect.width;
       const y = Math.random() * rect.height;
-      const r = 4 + Math.random() * 22;
+      const len = rect.width * (0.25 + Math.random() * 0.35);
+      const thickness = 10 + Math.random() * 22;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(strokeAngle + (Math.random() - 0.5) * 0.4);
+      ctx.globalAlpha = 0.05 + Math.random() * 0.04;
+      ctx.fillStyle = Math.random() > 0.5 ? "#000000" : "#ffffff";
+      ctx.beginPath();
+      ctx.ellipse(0, 0, len / 2, thickness / 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 미세한 먹 알갱이 결
+    ctx.globalAlpha = 0.035;
+    for (let i = 0; i < 140; i++) {
+      const x = Math.random() * rect.width;
+      const y = Math.random() * rect.height;
+      const r = 0.6 + Math.random() * 2.2;
       ctx.beginPath();
       ctx.fillStyle = Math.random() > 0.5 ? "#000000" : "#ffffff";
       ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -84,6 +103,7 @@
     canvas.style.pointerEvents = "auto";
     revealed = false;
     attributionEl.classList.remove("visible");
+    sealEl.classList.remove("stamped");
     instructionEl.style.opacity = "1";
   }
 
@@ -157,6 +177,7 @@
     canvas.style.pointerEvents = "none";
     instructionEl.style.opacity = "0";
     setTimeout(() => attributionEl.classList.add("visible"), 300);
+    setTimeout(() => sealEl.classList.add("stamped"), 700);
   }
 
   function pointFromEvent(e) {
