@@ -1,0 +1,235 @@
+:root {
+  --paper: #f3ede1;
+  --paper-2: #ece4d3;
+  --ink: #1c1a17;
+  --ink-soft: #3a352d;
+  --line: rgba(28, 26, 23, 0.14);
+  --accent: #7a2e2e;
+  --ink-canvas: #201c18;
+  --muted-rgb: 28, 26, 23;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: "Noto Serif KR", serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.35), transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.05), transparent 55%),
+    var(--paper);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.page {
+  width: 100%;
+  max-width: 680px;
+  padding: 48px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.35em;
+  color: var(--ink-soft);
+  text-transform: none;
+}
+
+.date {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: rgba(var(--muted-rgb), 0.45);
+  letter-spacing: 0.05em;
+}
+
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.question-block {
+  text-align: center;
+  padding: 0 8px;
+}
+
+.question {
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 1.8rem);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.question::before,
+.question::after {
+  content: "\201C";
+  color: var(--accent);
+  opacity: 0.55;
+}
+.question::after {
+  content: "\201D";
+}
+
+.reveal-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.instruction {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(var(--muted-rgb), 0.55);
+  letter-spacing: 0.04em;
+  transition: opacity 0.4s ease;
+}
+
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  min-height: 220px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(var(--muted-rgb), 0.10);
+  background: var(--paper-2);
+  touch-action: none;
+}
+
+.answer-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 28px;
+  gap: 14px;
+}
+
+.answer {
+  margin: 0;
+  font-size: clamp(1.1rem, 3.6vw, 1.45rem);
+  line-height: 1.7;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.attribution {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.attribution.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#inkCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  transition: opacity 0.9s ease;
+}
+
+.fallback-btn {
+  border: none;
+  background: none;
+  color: rgba(var(--muted-rgb), 0.5);
+  font-family: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+}
+.fallback-btn:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.site-footer {
+  margin-top: 48px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.ghost-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 10px 22px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+}
+.ghost-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.footnote {
+  margin: 0;
+  font-size: 0.7rem;
+  color: rgba(var(--muted-rgb), 0.4);
+  letter-spacing: 0.08em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #1b1815;
+    --paper-2: #241f1a;
+    --ink: #ece4d3;
+    --ink-soft: #c9bfa9;
+    --line: rgba(236, 228, 211, 0.12);
+    --accent: #d98c6b;
+    --ink-canvas: #060504;
+    --muted-rgb: 236, 228, 211;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.04), transparent 60%),
+      radial-gradient(ellipse at 80% 90%, rgba(0,0,0,0.25), transparent 55%),
+      var(--paper);
+  }
+  .canvas-wrap {
+    box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(0,0,0,0.35);
+  }
+}

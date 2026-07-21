@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하루 한 물음</title>
+<meta name="description" content="매일 하나의 질문을 마주하고, 먹을 문질러 답을 드러내는 사색의 공간">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <p class="eyebrow">하루 한 물음</p>
+      <p class="date" id="dateLabel"></p>
+    </header>
+
+    <main class="stage">
+      <section class="question-block">
+        <p class="question" id="question"></p>
+      </section>
+
+      <section class="reveal-block">
+        <p class="instruction" id="instruction">붓끝으로 먹을 문질러, 답을 드러내 보세요</p>
+        <div class="canvas-wrap" id="canvasWrap">
+          <div class="answer-layer">
+            <p class="answer" id="answer"></p>
+            <p class="attribution" id="attribution"></p>
+          </div>
+          <canvas id="inkCanvas" aria-label="문질러서 답을 드러내는 먹 화면"></canvas>
+        </div>
+        <button class="fallback-btn" id="fallbackBtn" type="button">그냥 볼게요</button>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <button id="shuffleBtn" type="button" class="ghost-btn">다른 질문 보기</button>
+      <p class="footnote">하루 한 물음 · 소크라테스 · 공자 · 장자 · 노자 · 플라톤</p>
+    </footer>
+  </div>
+
+  <script src="quotes.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
