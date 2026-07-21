@@ -11,7 +11,7 @@
   const sealEl = document.getElementById("seal");
   const ctx = canvas.getContext("2d");
 
-  const REVEAL_THRESHOLD = 0.15; // 이 비율 이상 지워지면 나머지를 자동으로 완전히 드러냄
+  const REVEAL_THRESHOLD = 0.35; // 이 비율 이상 지워지면 나머지를 자동으로 완전히 드러냄
   const SAMPLE_W = 48;
   const SAMPLE_H = 24;
   const sampleCanvas = document.createElement("canvas");
